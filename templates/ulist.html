@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <ul>
+<h3>-----select_related------</h3>
+        {% for i in li %}
+            <li>{{ i.username }}--{{ i.usertype.caption }} <a href="/edit-{{ i.id }}/">编辑</a></li>
+        {% endfor %}
+<h3>-----prefetch_related-------</h3>
+        {% for i in ll %}
+           <li>{{ i.username }}--{{ i.usertype.caption }} <a href="/edit-{{ i.id }}/">编辑</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

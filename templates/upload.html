@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .upload{
+            display: inline-block;padding: 10px;
+            background-color: chartreuse;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 90;
+        }
+        .file{
+            width: 100px;height: 50px;opacity: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+<div style="position: relative;width: 100px;height: 50px">
+    <input class="file" id='fileid' type="file" name="filename"/>
+    <a class="upload">选择文件</a>
+</div>
+<h2>1、原生ajax上传</h2>
+    <input type="button" value="上传XHR(原生)" onclick="xhrSumbit();" />
+<h2>2、jquery上传</h2>
+    <input type="button" value="上传jQuery" onclick="jqSumbit();" />
+<h2>3、iframe上传</h2>
+    <form id='formid' action="/upload_file/" method="post" target="ifmn" enctype="multipart/form-data">
+        <iframe id="ifm1" style="display: none" name="ifmn" ></iframe>
+        <input type="file" name="filename" onchange="autoupload();"/>
+        <input type="submit" onclick="iframeload();" value="iframe上传"/>
+    </form>
+    <div id="imgdiv"></div> {# 显示预览图片的div #}
+    <script src="/static/jquery-1.12.4.js"></script> {# jquery依赖 #}
+    <script>
+        function autoupload() { // 选择后自动上传预览
+            $('#ifm1').load(function () {
+                var data = $('#ifm1').contents().find('body').text(); // 获取后端返回的数据
+                var obj = JSON.parse(data); // str转dict
+                console.log(obj);
+                $('#imgdiv').empty(); // 清空
+                var imgtag = document.createElement('img'); // 创建img标签
+                imgtag.src = '/'+obj.data; // 设置img标签的src
+                $('#imgdiv').append(imgtag); // 添加
+            });
+            $('#formid').submit();
+        }
+        function xhrSumbit() {
+            //var file_obj = $('#fileid')[0]; // 和下面功能相同
+            var file_obj = document.getElementById('fileid').files[0];
+            var fd = new FormData();
+            fd.append('username', 'root');
+            fd.append('filename', file_obj);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST','/upload_file/',true);
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState == 4) {
+                    console.log('upload file success !');
+                }
+            };
+            xhr.send(fd);
+        }
+        function jqSumbit() {
+            var file_obj = document.getElementById('fileid').files[0];
+            var fd = new FormData();
+            fd.append('username', 'root');
+            fd.append('filename', file_obj);
+            $.ajax({
+                url:'/upload_file/',
+                type:'POST',
+                data:fd,
+                traditional:true,
+                processData:false, // 不要处理数据
+                contentType:false, // 不要设置类型
+                success:function (arg, a1, a2) {
+                    console.log('后端返回数据：',arg);
+                    console.log('后端返回值：',a1);
+                    console.log('XML数据对象：',a2);
+                }
+            })
+        }
+        function iframeload() {
+            $('#ifm1').load(function () {
+                var data = $('#ifm1').contents().find('body').text(); // 获取后端返回的数据
+                var obj = JSON.parse(data); // str转dict
+                console.log(obj);
+                $('#imgdiv').empty(); // 清空
+                var imgtag = document.createElement('img'); // 创建img标签
+                imgtag.src = "/" + obj.data; // 设置img标签的src
+                $('#imgdiv').append(imgtag); // 添加
+            });
+        }
+    </script>
+</body>
+</html>

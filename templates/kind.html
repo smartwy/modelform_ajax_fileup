@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form>
+    <div style="width:500px;margin: 0 auto">
+        <textarea id="content"></textarea>
+    </div>
+    <input type="submit" value="提交" />
+</form>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script src="/static/plugins/kindeditor/kindeditor-all.js"></script>
+    <script>
+        $(function () {
+            KindEditor.create('#content',{
+                width: '100%',       // 文本框宽度(可以百分比或像素)
+                height: '300px',     // 文本框高度(只能像素)
+                minWidth: 200,       // 最小宽度（数字）
+                minHeight: 400,      // 最小高度（数字）
+                uploadJson: '/upload_img/', // 上传资料时的目录
+                fileManagerJson: '/file_manager/',
+                allowImageRemote: true,
+                allowImageUpload: true,
+                allowFileManager: true,
+                extraFileUploadParams:{     // 添加额外的参数
+                    csrfmiddlewaretoken:"{{ csrf_token }}"
+                },
+                filePostName:'fpn'
+            });
+        })
+    </script>
+</body>
+</html>

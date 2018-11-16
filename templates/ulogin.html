@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/static/plugins/font-awesome/css/font-awesome.css"/>
+    <link rel="stylesheet" href="/static/css/edmure.css"/>
+    <link rel="stylesheet" href="/static/css/commons.css"/>
+    <link rel="stylesheet" href="/static/css/account.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+{% if mes %}
+    <h1>{{ mes }}</h1>
+{% else %}
+    <div class="login">
+        <div style="font-size: 25px; font-weight: bold;text-align: center;">
+            <h3>用户登录</h3>
+        </div>
+        <div>
+        <form role="form" action="/ulogin/" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" class="form-control" name="name"  placeholder="请输入用户名">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" name="pwd" placeholder="请输入密码">
+            </div>
+            <div class="form-group">
+                <label for="password">验证码</label>
+
+                <div class="row">
+                    <div class="col-xs-7">
+                        <input type="text" class="form-control" placeholder="请输入验证码" name="check_code">
+                    </div>
+                    <div class="col-xs-5">
+                        <img src="/get_code/" onclick="changeCheckCode(this);">
+                    </div>
+                </div>
+
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> 一个月内自动登陆
+                </label>
+                <div class="right">
+                    <a href="#">忘记密码？</a>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default">登 陆</button>
+        </form>
+    </div>
+{% endif %}
+    <script>
+        function changeCheckCode(ths){
+            ths.src = ths.src +  '?';
+        }
+    </script>
+
+</body>
+</html>

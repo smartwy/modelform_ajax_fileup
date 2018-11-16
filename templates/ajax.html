@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>1、XMLHttpRequest - Ajax请求(原生)</h1>
+    <input type="button" value="Ajax1"  onclick="Ajax1();" />
+    <script>
+        // 兼容设置，
+        function GetXHR(){
+            var xhr = null;
+            if(XMLHttpRequest){
+                xhr = new XMLHttpRequest();
+            }else{
+                xhr = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            return xhr;
+        }
+
+        function Ajax1() {
+            var xhr = GetXHR();
+            // 创建连接请求
+            xhr.open('POST', '/ajax_json/', true);
+            // 设置请求头信息
+            xhr.setRequestHeader('k1', 'v1');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset-UTF-8');
+            // 发送数据
+            xhr.send('name=ajax;email=test');
+            xhr.onreadystatechange = function () {
+                // 判断是否已经接收到全部响应数据
+                //**.readyState
+                  // 0-未初始化，尚未调用open()方法；
+                  // 1-启动，调用了open()方法，未调用send()方法；
+                  // 2-发送，已经调用了send()方法，未接收到响应；
+                  // 3-接收，已经接收到部分响应数据；
+                  // 4-完成，已经接收到全部响应数据；
+                if (xhr.readyState == 4) {
+{#                    console.log(xhr.responseText,xhr.status,xhr.statusText);#}
+                    var obj = JSON.parse(xhr.responseText);
+                    console.log(obj);
+{#                    location.reload();#}
+                }
+            };
+        }
+    </script>
+
+<h1>2、伪Ajax请求一，重组iframe标签</h1>
+        <div>
+            <p>请输入要加载的地址：</p>
+            <p>
+                <input id="url" type="text" />
+                <input type="button" value="刷新" onclick="LoadPage();">
+            </p>
+        </div>
+        <div>
+            <h3>加载页面位置：</h3>
+            <iframe id="iframePosition" ></iframe>
+        </div>
+        <script type="text/javascript">
+            function LoadPage(){
+                var targetUrl =  document.getElementById('url').value;
+                document.getElementById("iframePosition").src = targetUrl;
+            }
+        </script>
+
+<h1>3、伪Ajax请求二，iframe标签，jQuery重组iframe标签</h1>
+    <input id='url' type="text" /><input type="button" value="iframe请求" onclick="iframefun()" />
+    <iframe id="ifm" src="" style="width: 100%;height: 500px;"></iframe>
+    <script type="text/javascript" src="/static/jquery-1.12.4.js"></script>
+    <script>
+        function iframefun() {
+            var url = $('#url').val();
+            $('#ifm').attr('src', url);
+        }
+    </script>
+    {#将form提交数据，返回的数据在iframe标签内显示#}
+<h1>4、伪Ajax请求三，form与iframe</h1>
+    <form action="/ajax_json/" method="post" target="ifmn">
+        <input id='dis1' type="text" value="" placeholder="等待返回的数据1"/>
+        <input id='dis2' type="text" value="" placeholder="等待返回的数据2"/>
+        <iframe style="display: none" id="ifm1" name="ifmn" ></iframe>
+        <input type="text" name="username" placeholder="用户名" />
+        <input type="text" name="email" placeholder="邮箱"/>
+        <input type="submit" onclick="sumbitLoad();" value="Form提交"/>
+    </form>
+    <script>
+        function sumbitLoad() {
+            $('#ifm1').load(function () {
+                var data = $('#ifm1').contents().find('body').text(); // 获取后端返回的数据
+                var obj = JSON.parse(data); // 转换
+                $('#dis1').val(obj[name='low-name']); // 赋值
+                $('#dis2').val(obj[name='low-email']);
+            })
+        }
+    </script>
+</body>
+</html>

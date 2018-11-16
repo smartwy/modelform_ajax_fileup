@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% if mes %}
+    <h2>{{ mes }}</h2>
+{% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ obj.as_p }}
+        <input type="submit" value="提交" />
+        <a href="/ulist/">用户列表</a>
+    </form>
+</body>
+</html>
